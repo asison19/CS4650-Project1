@@ -28,12 +28,6 @@ def remove_outlier(df_in, col_name):
 df = pd.read_csv('CCA_CalPolyPomona (34.057830404602164 -117.82446560796507) Primary 01_01_2019 9_29_19.csv')
 df['created_at'] = pd.to_datetime(df['created_at'],format = "%Y-%m-%d %H:%M:%S %Z")
 
-# print first and last 20 rows
-print(df.head(20))
-print(df.tail(20))
-
-print(df.dtypes)
-
 # Remove outliers in the inputed columns
 df = remove_outlier(df,'Temperature_F')
 df = remove_outlier(df,'Humidity_%')
@@ -63,21 +57,21 @@ plt.xlabel("")
 plt.ylim(ybot,ytop)
 
 
-# Figure_3 PM 2.5 change over time
-df.plot(kind = 'line', color = 'orange',x = 'created_at', y = 'PM2.5_CF_ATM_ug/m3', label = "PM 2.5",title = "PM 2.5 change over time")
-plt.xlabel("")
-plt.axhline(y=pmStandard1, color='r', linestyle='dashed', label = str(pmStandard1) + " ug/m3")
-plt.axhline(y=pmStandard2, color='r', linestyle='solid', label = str(pmStandard2) + " ug/m3")
-plt.ylim(ybot,ytop)
+# # Figure_3 PM 2.5 change over time
+# df.plot(kind = 'line', color = 'orange',x = 'created_at', y = 'PM2.5_CF_ATM_ug/m3', label = "PM 2.5",title = "PM 2.5 change over time")
+# plt.xlabel("")
+# plt.axhline(y=pmStandard1, color='r', linestyle='dashed', label = str(pmStandard1) + " ug/m3")
+# plt.axhline(y=pmStandard2, color='r', linestyle='solid', label = str(pmStandard2) + " ug/m3")
+# plt.ylim(ybot,ytop)
 
-# Figure_4 PM 10.0 change over time
-df.plot(kind = 'line', color = 'orange',x = 'created_at', y = 'PM10.0_CF_ATM_ug/m3', label = "PM 10.0", title = "PM 10.0 change over time")
-plt.xlabel("")
-plt.axhline(y=pmStandard3, color='r', linestyle='dashed', label = "150 ug/m3")
-# as of September 2006, the EPA has stated that
-# "the annual PM10 standard was revoked because of a lack of evidence establishing a link between long-term exposure to coarse particles and health problems"
-# plt.axhline(y=50, color='r', linestyle='solid', label = "50 ug/m3") 
-plt.ylim(ybot,ytop)
+# # Figure_4 PM 10.0 change over time
+# df.plot(kind = 'line', color = 'orange',x = 'created_at', y = 'PM10.0_CF_ATM_ug/m3', label = "PM 10.0", title = "PM 10.0 change over time")
+# plt.xlabel("")
+# plt.axhline(y=pmStandard3, color='r', linestyle='dashed', label = "150 ug/m3")
+# # as of September 2006, the EPA has stated that
+# # "the annual PM10 standard was revoked because of a lack of evidence establishing a link between long-term exposure to coarse particles and health problems"
+# # plt.axhline(y=50, color='r', linestyle='solid', label = "50 ug/m3") 
+# plt.ylim(ybot,ytop)
 
 # Figure_5 Is there a correlation between temperature and PM?
 ax2 = df.plot(kind = 'line', x = 'created_at', y = 'PM10.0_CF_ATM_ug/m3', label = "PM 10",
@@ -106,8 +100,10 @@ plt.ylabel("Degrees Fahrenheit")
 plt.figure()
 
 # Figure_9 median temperature of each day
-df_my = df.groupby(df['created_at'].dt.strftime('%m/%d/%y'))['Temperature_F'].median()
-df_my.plot(kind = 'line',  label = "Temperature", title = "Median temperature of each day")
+df_mt = df.groupby(df['created_at'].dt.strftime('%m/%d/%y'))['Temperature_F'].median()
+df_m25 = df.groupby(df['created_at'].dt.strftime('%m/%d/%y'))['PM2.5_CF_ATM_ug/m3'].median()
+ax5 = df_m25.plot(kind = 'line',  label = "PM2.5_CF_ATM_ug/m3")
+df_mt.plot(kind = 'line',  label = "Temperature", title = "Median temperature of each day", ax = ax5)
 plt.ylim(0,120)
 plt.xlabel("")
 plt.ylabel("Degrees Fahrenheit")
@@ -126,44 +122,5 @@ df_my.plot(kind = 'line',  label = "Temperature", title = "Median humidity % of 
 plt.ylim(0,100)
 plt.xlabel("")
 plt.ylabel("Humidity %")
-plt.figure()
-
-# Figure_12 median PM 2.5 of each month
-df_my = df.groupby(df['created_at'].dt.strftime('%m-%y'))['PM2.5_CF_ATM_ug/m3'].median()
-df_my.plot(kind = 'bar',  label = "PM2.5_CF_ATM_ug/m3", title = "Median PM 2.5 of each month")
-plt.xlabel('Date: mm-yy')
-plt.ylabel("PM 2.5")
-plt.axhline(y=pmStandard1, color='r', linestyle='dashed', label = "35 ug/m3")
-plt.axhline(y=pmStandard2, color='r', linestyle='solid', label = "12 ug/m3")
-plt.ylim(ybot,ytop)
-plt.figure()
-
-# Figure_13 median PM 2.5 of each day
-df_my = df.groupby(df['created_at'].dt.strftime('%m/%d/%y'))['PM2.5_CF_ATM_ug/m3'].median()
-df_my.plot(kind = 'line',  label = "PM2.5_CF_ATM_ug/m3", title = "Median PM 2.5 of each day")
-plt.xlabel("")
-plt.ylabel("PM 2.5")
-plt.axhline(y=pmStandard1, color='r', linestyle='dashed', label = str(pmStandard1) + " ug/m3")
-plt.axhline(y=pmStandard2, color='r', linestyle='solid', label = str(pmStandard2) + " ug/m3")
-plt.ylim(ybot,ytop)
-plt.figure()
-
-# Figure_14 median PM 10.0 of each month
-df_my = df.groupby(df['created_at'].dt.strftime('%m-%y'))['PM10.0_CF_ATM_ug/m3'].median()
-df_my.plot(kind = 'bar',  label = "PM10.0_CF_ATM_ug/m3", title = "Median PM 10.0 of each month")
-plt.xlabel('Date: mm-yy')
-plt.ylabel("PM 10.0")
-plt.axhline(y=pmStandard3, color='r', linestyle='dashed', label = "150 ug/m3")
-plt.ylim(ybot,ytop)
-plt.figure()
-
-# Figure_15 median PM 10.0 of each day
-df_my = df.groupby(df['created_at'].dt.strftime('%m/%d/%y'))['PM10.0_CF_ATM_ug/m3'].median()
-df_my.plot(kind = 'line',  label = "PM10.0_CF_ATM_ug/m3", title = "Median PM 10.0 of each day")
-plt.xlabel("")
-plt.ylabel("PM 10.0")
-plt.axhline(y=pmStandard3, color='r', linestyle='dashed', label = "150 ug/m3")
-plt.ylim(ybot,ytop)
-
 
 plt.show()
