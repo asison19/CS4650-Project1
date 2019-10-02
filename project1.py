@@ -56,71 +56,61 @@ df.plot(kind = 'line', color = 'orange',x = 'created_at', y = 'PM1.0_CF_ATM_ug/m
 plt.xlabel("")
 plt.ylim(ybot,ytop)
 
-
-# # Figure_3 PM 2.5 change over time
-# df.plot(kind = 'line', color = 'orange',x = 'created_at', y = 'PM2.5_CF_ATM_ug/m3', label = "PM 2.5",title = "PM 2.5 change over time")
-# plt.xlabel("")
-# plt.axhline(y=pmStandard1, color='r', linestyle='dashed', label = str(pmStandard1) + " ug/m3")
-# plt.axhline(y=pmStandard2, color='r', linestyle='solid', label = str(pmStandard2) + " ug/m3")
-# plt.ylim(ybot,ytop)
-
-# # Figure_4 PM 10.0 change over time
-# df.plot(kind = 'line', color = 'orange',x = 'created_at', y = 'PM10.0_CF_ATM_ug/m3', label = "PM 10.0", title = "PM 10.0 change over time")
-# plt.xlabel("")
-# plt.axhline(y=pmStandard3, color='r', linestyle='dashed', label = "150 ug/m3")
-# # as of September 2006, the EPA has stated that
-# # "the annual PM10 standard was revoked because of a lack of evidence establishing a link between long-term exposure to coarse particles and health problems"
-# # plt.axhline(y=50, color='r', linestyle='solid', label = "50 ug/m3") 
-# plt.ylim(ybot,ytop)
-
-# Figure_5 Is there a correlation between temperature and PM?
+# Figure_3 Is there a correlation between temperature and PM?
 ax2 = df.plot(kind = 'line', x = 'created_at', y = 'PM10.0_CF_ATM_ug/m3', label = "PM 10",
              title = "Temperature and PM")
 df.plot(kind = 'line', x = 'created_at', y = 'Temperature_F', label = "Temperature (F)", ax = ax2)
 plt.xlabel("")
 
-# Figure_6 Is there a correlation between Humidity and PM?
+# Figure_4 Is there a correlation between Humidity and PM?
 ax3 = df.plot(kind = 'line', x = 'created_at', y = 'PM10.0_CF_ATM_ug/m3', label = "PM 10",
              title = "Humidity and PM")
 df.plot(kind = 'line', x = 'created_at', y = 'Humidity_%', label = "Humidity %", ax = ax3)
 plt.xlabel("")
 
-# Figure_7 Is there a correlation between temperature and humidity?
+# Figure_5 Is there a correlation between temperature and humidity?
 ax4 = df.plot(kind = 'line', x = 'created_at', y = 'Temperature_F', label = "Temperature",
              title = "Temperature and humidity")
 df.plot(kind = 'line', x = 'created_at', y = 'Humidity_%', label = "Humidity %", ax = ax4)
 plt.xlabel("")
 plt.figure()
 
-# Figure_8 median temperature of each month
+# Figure_6 median temperature of each month 
 df_my = df.groupby(df['created_at'].dt.strftime('%m-%y'))['Temperature_F'].median()
 df_my.plot(kind = 'bar',  label = "Temperature", title = "Median temperature of each month")
 plt.xlabel('Date: mm-yy')
 plt.ylabel("Degrees Fahrenheit")
 plt.figure()
 
-# Figure_9 median temperature of each day
+# Figure_7 median temperature of each day
 df_mt = df.groupby(df['created_at'].dt.strftime('%m/%d/%y'))['Temperature_F'].median()
-df_m25 = df.groupby(df['created_at'].dt.strftime('%m/%d/%y'))['PM2.5_CF_ATM_ug/m3'].median()
-ax5 = df_m25.plot(kind = 'line',  label = "PM2.5_CF_ATM_ug/m3")
-df_mt.plot(kind = 'line',  label = "Temperature", title = "Median temperature of each day", ax = ax5)
+# df_m25 = df.groupby(df['created_at'].dt.strftime('%m/%d/%y'))['PM2.5_CF_ATM_ug/m3'].median()
+# ax5 = df_m25.plot(kind = 'line',  label = "PM2.5_CF_ATM_ug/m3")
+df_mt.plot(kind = 'line',  label = "Temperature", title = "Median temperature of each day")
 plt.ylim(0,120)
 plt.xlabel("")
 plt.ylabel("Degrees Fahrenheit")
 plt.figure()
 
-# Figure_10 median humidity of each month
+# Figure_8 median humidity of each month
 df_my = df.groupby(df['created_at'].dt.strftime('%m-%y'))['Humidity_%'].median()
 df_my.plot(kind = 'bar',  label = "Temperature", title = "Median humididty % of each month")
 plt.xlabel('Date: mm-yy')
 plt.ylabel("Humidity %")
 plt.figure()
 
-# Figure_11 median humidity of each day
+# Figure_9 median humidity of each day
 df_my = df.groupby(df['created_at'].dt.strftime('%m/%d/%y'))['Humidity_%'].median()
 df_my.plot(kind = 'line',  label = "Temperature", title = "Median humidity % of each day")
 plt.ylim(0,100)
 plt.xlabel("")
 plt.ylabel("Humidity %")
+
+# 10 PM 2.5 vs Temperature
+df.plot(kind = 'scatter', x = 'Temperature_F', y ='PM2.5_CF_ATM_ug/m3', title = "PM 2.5 vs Temperature")
+
+# 11 PM 2.5 vs Humidity
+df.plot(kind = 'scatter', x = 'Humidity_%', y ='PM2.5_CF_ATM_ug/m3', title = "PM 2.5 vs Humidity")
+
 
 plt.show()

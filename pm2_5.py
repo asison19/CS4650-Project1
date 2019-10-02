@@ -4,8 +4,11 @@ This file contains the data visualizations for the PM 2.5 Levels
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+import pytz
+import datetime as dt
 from pandas import Series, DataFrame
-from datetime import datetime, timedelta
+
 
 # Remove any outliers from the given dataframe's column and 
 # return the cleaned data in a new dataframe
@@ -53,7 +56,7 @@ pmStandard2 = 12 # Annual PM 2.5
 # Figure_1 PM 2.5 change over time
 df.plot(kind = 'line', color = 'orange',x = 'created_at', y = 'PM2.5_CF_ATM_ug/m3', label = "PM 2.5",title = "PM 2.5 change over time of Cal Poly Pomona")
 plt.xlabel('Date')
-plt.ylabel("ug/m")
+plt.ylabel("ug/m3")
 plt.axhline(y=pmStandard1, color='r', linestyle='dashed', label = str(pmStandard1) + " ug/m3")
 plt.axhline(y=pmStandard2, color='r', linestyle='solid', label = str(pmStandard2) + " ug/m3")
 plt.ylim(ybot,ytop)
@@ -64,7 +67,7 @@ plt.figure()
 df_my = df.groupby(df['created_at'].dt.strftime('%m-%Y'))['PM2.5_CF_ATM_ug/m3'].median()
 df_my.plot(kind = 'bar',  label = "PM 2.5", title = "Median PM 2.5 of each month of Cal Poly Pomona")
 plt.xlabel('Date: mm-yyyy')
-plt.ylabel("ug/m")
+plt.ylabel("ug/m3")
 plt.axhline(y=pmStandard1, color='r', linestyle='dashed', label = str(pmStandard1) + " ug/m3")
 plt.axhline(y=pmStandard2, color='r', linestyle='solid', label =  str(pmStandard2) + " ug/m3")
 plt.ylim(ybot,ytop)
@@ -75,9 +78,11 @@ plt.figure()
 df_mdy = df.groupby(df['created_at'].dt.strftime('%m/%d/%y'))['PM2.5_CF_ATM_ug/m3'].median()
 df_mdy.plot(kind = 'line',  label = "PM 2.5", title = "Median PM 2.5 of each day of Cal Poly Pomona")
 plt.xlabel("Date")
-plt.ylabel("ug/m")
+plt.ylabel("ug/m3")
 plt.axhline(y=pmStandard1, color='r', linestyle='dashed', label = str(pmStandard1) + " ug/m3")
 plt.axhline(y=pmStandard2, color='r', linestyle='solid', label = str(pmStandard2) + " ug/m3")
+semesterStart = mdates.date2num(dt.datetime(2019,8,22))
+plt.axvline(semesterStart,color='r')
 plt.ylim(ybot,ytop)
 plt.legend()
 plt.figure()
@@ -92,7 +97,7 @@ df2_my.plot(kind = 'bar', stacked = True,  label = "Santa Rosa", color = 'orange
 plt.axhline(y=pmStandard1, color='r', linestyle='dashed', label = str(pmStandard1) + " ug/m3")
 plt.axhline(y=pmStandard2, color='r', linestyle='solid', label = str(pmStandard2) + " ug/m3")
 plt.xlabel('Date: mm-yyyy')
-plt.ylabel("ug/m")
+plt.ylabel("ug/m3")
 plt.legend()
 plt.ylim(ybot,ytop)
 plt.figure()
@@ -106,9 +111,22 @@ df2_mdy.plot(kind = 'line',  label = "Santa Rosa", color = 'orange')
 df3_mdy.plot(kind = 'line',  label = "Los Angeles", color = 'green')
 plt.axhline(y=pmStandard1, color='r', linestyle='dashed', label = str(pmStandard1) + " ug/m3")
 plt.axhline(y=pmStandard2, color='r', linestyle='solid', label = str(pmStandard2) + " ug/m3")
+plt.axvline(semesterStart,color='r')
 plt.xlabel('Date')
-plt.ylabel("ug/m")
+plt.ylabel("ug/m3")
 plt.legend()
 plt.ylim(ybot,ytop)
+plt.figure()
+
+# Figure_6
+df_temp = df.groupby(df['created_at'].dt.strftime('%m/%d/%y'))['Temperature_F'].median()
+df_hum = df.groupby(df['created_at'].dt.strftime('%m/%d/%y'))['Humidity_%'].median()
+
+df_mdy.plot(kind = 'line', label = "PM 2.5", title = "PM 2.5, Temperature, and Humidity")
+df_temp.plot(kind = 'line', label = "Temperature_F")
+df_hum.plot(kind = 'line', label = "Humidity %")
+
+plt.xlabel('Date')
+plt.legend()
 
 plt.show()
