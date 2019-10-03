@@ -1,5 +1,5 @@
 """
-This file contains the data visualizations for the PM 20.0 Levels
+This file contains the data visualizations for the PM 10.0 Levels
 """
 import numpy as np
 import pandas as pd
@@ -106,7 +106,7 @@ plt.ylim(ybot,ytop)
 plt.legend()
 plt.figure()
 
-# Figure_6
+# Figure_6 PM 2.5, Temperature, and Humidity by day
 df_temp = df.groupby(df['created_at'].dt.strftime('%m/%d/%y'))['Temperature_F'].median()
 df_hum = df.groupby(df['created_at'].dt.strftime('%m/%d/%y'))['Humidity_%'].median()
 
@@ -116,5 +116,15 @@ df_hum.plot(kind = 'line', label = "Humidity %")
 
 plt.xlabel('Date')
 plt.legend()
+plt.figure()
 
+# Figure_7 PM 2.5, Temperature, and Humidity by month
+df_temp = df.groupby(df['created_at'].dt.strftime('%m/%y'))['Temperature_F'].median()
+df_hum = df.groupby(df['created_at'].dt.strftime('%m/%y'))['Humidity_%'].median()
+
+df_my.plot(kind = 'line', label = "PM 10", title = "PM 10, Temperature, and Humidity")
+df_temp.plot(kind = 'line', label = "Temperature_F")
+df_hum.plot(kind = 'line', label = "Humidity %")
+plt.xlabel('Date')
+plt.legend()
 plt.show()
